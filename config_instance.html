@@ -1,0 +1,62 @@
+<?php
+    $r = get_records('role');
+    $roles = array();
+    foreach ($r as $id => $role) {
+        $roles[$id] = $role->name;
+    }
+?>
+<table cellpadding="9" cellspacing="0">
+<tr valign="top">
+    <td align="right">
+        <?php print_string('showhowmanyonlist', 'block_programming_standing'); ?>:
+    </td>
+    <td>
+        <input type="text" name="listhowmany" value="<?php echo $this->config->listhowmany; ?>"/>
+    </td>
+</tr>
+<tr valign="top">
+    <td align="right">
+        <?php print_string('perpageonfulllist', 'block_programming_standing'); ?>:
+    </td>
+    <td>
+        <input type="text" name="perpageonfulllist" value="<?php echo $this->config->perpageonfulllist; ?>"/>
+    </td>
+</tr>
+<tr valign="top">
+    <td align="right">
+        <?php print_string('shownames', 'block_programming_standing'); ?>:
+    </td>
+    <td>
+        <input type="text" name="shownames" value="<?php echo $this->config->shownames; ?>"/>
+    </td>
+</tr>
+<tr valign="top">
+    <td align="right">
+        <?php print_string('roleforstanding', 'block_programming_standing'); ?>:
+    </td>
+    <td>
+        <?php choose_from_menu($roles, 'roleforstanding', $this->config->roleforstanding, ''); ?>
+    </td>
+</tr>
+<tr valign="top">
+    <td align="right">
+        <?php print_string('howmanyminuteswrongsubmit', 'block_programming_standing'); ?>:
+    </td>
+    <td>
+        <input type="text" name="wrongsubmitminutes" value="<?php echo $this->config->wrongsubmitminutes; ?>"/>
+    </td>
+</tr>
+<tr>
+    <td align="right">
+        <?php print_string('showdetail', 'block_programming_standing'); ?>:
+    </td>
+    <td>
+        <input type="text" name="showdetail" value="<?php echo $this->config->showdetail; ?>"/>
+    </td>
+</tr>
+<tr>
+    <td colspan="2" align="center">
+        <input type="submit" value="<?php print_string('savechanges') ?>" />
+    </td>
+</tr>
+</table>
