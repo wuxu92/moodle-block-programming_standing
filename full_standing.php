@@ -58,7 +58,7 @@
 
     $table = new flexible_table('programming-standing-full-standing');
     $def = array('number', 'user', 'accepted');
-    if ($course != 1) {
+    if ($course->id != 1) {
         $def[] = 'penalty';
     };
     if (! $block->config->showdetail) {
@@ -116,7 +116,7 @@
             ++$i,
             $i <= $block->config->shownames || has_capability('block/programming_standing:view') || $t->user->id == $USER->id ? '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$t->user->id.'&amp;course='.$course->id.'">'.fullname($t->user).'</a>' : '???',
             $t->ac);
-        if ($course != 1) {
+        if ($course->id != 1) {
             $data[] = sprintf('%d:%02d:%02d', $p / 3600, ($p % 3600) / 60, ($p % 60));
         }
         if (! $block->config->showdetail) {
