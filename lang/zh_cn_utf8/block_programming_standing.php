@@ -13,6 +13,7 @@ $string['showhowmanyonlist'] = '在排名列表上列出多少记录';
 $string['perpageonfulllist'] = '在完整名单上每页列出多少人';
 $string['roleforstanding'] = '需要排名的角色';
 $string['howmanyminuteswrongsubmit'] = '每次提交记为多少分钟的罚分';
-
+$string['shownames'] = '显示前多少名的名字';
+$string['showdetail'] = '是否显示详细信息';
 
 ?>
