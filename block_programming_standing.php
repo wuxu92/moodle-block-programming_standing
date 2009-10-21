@@ -20,6 +20,8 @@ class block_programming_standing extends block_base {
     function get_content() {
         global $CFG, $USER;
 
+        $context = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
+
         if ($this->content != NULL) {
             return $this->content;
         }
@@ -42,7 +44,7 @@ class block_programming_standing extends block_base {
             $c .= '<tr align="center">';
             $c .= '<td>'.$i++.'</td>';
             $c .= '<td>';
-            $c .= $i <= $this->config->shownames || has_capability('block/programming_standing:view') || $t->user->id == $USER->id ? '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$t->user->id.'&amp;course='.$this->instance->pageid.'">'.fullname($t->user).'</a>' : '???';
+            $c .= $i <= $this->config->shownames || has_capability('block/programming_standing:view', $context) || $t->user->id == $USER->id ? '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$t->user->id.'&amp;course='.$this->instance->pageid.'">'.fullname($t->user).'</a>' : '???';
             $c .= '</td>';
         
             $c .= '<td>'.$t->ac.'</td>';

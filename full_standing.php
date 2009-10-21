@@ -9,6 +9,7 @@
 
     $instance = get_record('block_instance', 'id', $id);
     $block = block_instance('programming_standing', $instance);
+    $context = get_context_instance(CONTEXT_BLOCK, $id);
     $perpage = $block->config->perpageonfulllist;
 
     if (!$course = get_record('course', 'id', $block->instance->pageid)) {
@@ -52,6 +53,14 @@
 /// Print the main part of the page
     $tops = programming_calc_standing($course->id, $block->config->roleforstanding, $block->config->wrongsubmitminutes, $page * $perpage, $perpage);
     $totalcount = programming_count_standing($course->id, $block->config->roleforstanding);
+
+    $progs = array();
+    foreach (get_all_instances_in_course('programming', $course) as $prog) {
+        $cm = get_coursemodule_from_instance('programming', $prog->id, $course->id);
+        if ($cm->visible) {
+            $progs[] = $prog;
+        }
+    }
     
     echo '<div class="maincontent generalbox">';
     echo '<h1 align="center">'.get_string('programmingstanding', 'block_programming_standing').'</h1>';
@@ -67,11 +76,8 @@
         $def[] = 'institution';
         $def[] = 'department';
     } else {
-        $progs = get_records('programming', 'course', $course->id, 'name');
-        if ($progs) {
-            foreach ($progs as $prog) {
-                $def[] = $prog->id;
-            }
+        foreach ($progs as $prog) {
+            $def[] = $prog->id;
         }
     }
 
@@ -82,7 +88,7 @@
         get_string('accepted', 'block_programming_standing')
     );
     if ($course->id != 1) {
-        get_string('penalty', 'block_programming_standing');
+        $headers[] = get_string('penalty', 'block_programming_standing');
     }
     if (! $block->config->showdetail) {
         $headers[] = get_string('submitcount', 'block_programming_standing');
@@ -90,10 +96,8 @@
         $headers[] = get_string('institution');
         $headers[] = get_string('department');
     } else {
-        if ($progs) {
-            foreach ($progs as $prog) {
-                $headers[] = $prog->name;
-            }
+        foreach ($progs as $prog) {
+            $headers[] = "<a href='{$CFG->wwwroot}/mod/programming/view.php?id={$prog->id}'>$prog->name</a>";
         }
     }
 
@@ -114,7 +118,7 @@
         $tu = $t->timeused;
         $data = array(
             ++$i,
-            $i <= $block->config->shownames || has_capability('block/programming_standing:view') || $t->user->id == $USER->id ? '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$t->user->id.'&amp;course='.$course->id.'">'.fullname($t->user).'</a>' : '???',
+            $i <= $block->config->shownames || has_capability('block/programming_standing:view', $context) || $t->user->id == $USER->id ? '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$t->user->id.'&amp;course='.$course->id.'">'.fullname($t->user).'</a>' : '???',
             $t->ac);
         if ($course->id != 1) {
             $data[] = sprintf('%d:%02d:%02d', $p / 3600, ($p % 3600) / 60, ($p % 60));
