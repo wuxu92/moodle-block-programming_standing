@@ -27,7 +27,7 @@
     array_unshift($CFG->scripts, $CFG->wwwroot.'/mod/programming/js/MochiKit/MochiKit.js');
 
     if ($course->category) {
-        $navigation = '<a href="../../course/view.php?id='.$course->id.'">'.$course->shortname.'</a> ->';
+        $navigation = build_navigation(get_string('programmingstanding', 'block_programming_standing'));
     }
 
     $strprogrammings = get_string('modulenameplural', 'programming');
@@ -42,7 +42,7 @@
     print_header(
         $course->shortname.': '.get_string('programmingstanding', 'block_programming_standing'),
         $course->fullname,
-        $navigation.get_string('programmingstanding', 'block_programming_standing'),
+        $navigation,
         '', // focus
         $meta,
         true,
