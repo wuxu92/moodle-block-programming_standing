@@ -32,7 +32,14 @@ class block_programming_standing_renderer extends plugin_renderer_base {
         return $c;
     }
 
-    function footer() {
+    function footer($config, $blockid, $courseid) {
+        global $OUTPUT;
+
+        $c =  html_writer::start_tag('p', array('class' => 'more'));
+        $c .= $OUTPUT->action_link(new moodle_url('/blocks/programming_standing/full_standing.php', array('id' => $blockid, 'course' => $courseid)), get_string('more'));
+        $c .= html_writer::end_tag('p');
+
+        return $c;
     }
 
 }

@@ -4,5 +4,6 @@
 
 .block_programming_standing .content .generaltable {
     width: 90%;
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
 }

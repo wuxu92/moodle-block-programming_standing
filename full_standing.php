@@ -4,51 +4,30 @@
     include_once('../../mod/programming/lib.php');
     include_once('../../lib/tablelib.php');
 
-    $id = optional_param('id', 0, PARAM_INT);    // block instance id
+    $id = required_param('id', PARAM_INT);    // Block ID
+    $courseid = required_param('course', PARAM_INT);    // Course ID
     $page = optional_param('page', 0, PARAM_INT);
 
-    $instance = get_record('block_instance', 'id', $id);
-    $block = block_instance('programming_standing', $instance);
-    $context = get_context_instance(CONTEXT_BLOCK, $id);
-    $perpage = $block->config->perpageonfulllist;
-
-    if (!$course = get_record('course', 'id', $block->instance->pageid)) {
-        error('course misconfigured');
+    if (!$course = $DB->get_record('course', array('id' => $courseid))) {
+        print_error('course misconfigured');
     }
 
-    require_login($course->id);
+    $instance = $DB->get_record('block_instances', array('id' => $id));
+    $block = block_instance('programming_standing', $instance);
+    $block->default_config();
+    $blockcontext = get_context_instance(CONTEXT_BLOCK, $id);
+
+    $perpage = $block->config->perpageonfulllist;
+    $params = array('id' => $id, 'course' => $courseid, 'page' => $page, 'perpage' => $perpage);
+
+    require_login($course->id, true);
+    $context = get_context_instance(CONTEXT_COURSE, $courseid);
+    $PAGE->set_course($course);
+    $PAGE->set_url('/mod/programming/view.php', $params);
 
 /// Print the page header
-    if (!isset($CFG->scripts) || !is_array($CFG->scripts)) {
-        $CFG->scripts = array();
-        $CFG->scripts[] = '/mod/programming/programming.js';
-    }
-    $CFG->stylesheets[] = $CFG->wwwroot.'/mod/programming/programming.css';
-    array_unshift($CFG->scripts, $CFG->wwwroot.'/mod/programming/js/MochiKit/MochiKit.js');
-
-    if ($course->category) {
-        $navigation = build_navigation(get_string('programmingstanding', 'block_programming_standing'));
-    }
-
-    $strprogrammings = get_string('modulenameplural', 'programming');
-    $strprogramming  = get_string('modulename', 'programming');
-
-    $meta = '';
-    foreach ($CFG->scripts as $script) {
-        $meta .= '<script type="text/javascript" src="'.$script.'"></script>';
-        $meta .= "\n";
-    }
-
-    print_header(
-        $course->shortname.': '.get_string('programmingstanding', 'block_programming_standing'),
-        $course->fullname,
-        $navigation,
-        '', // focus
-        $meta,
-        true,
-        '',
-        '',
-        false);
+    $PAGE->set_heading(format_string($course->fullname));
+    echo $OUTPUT->header();
 
 /// Print the main part of the page
     $tops = programming_calc_standing($course->id, $block->config->roleforstanding, $block->config->wrongsubmitminutes, $page * $perpage, $perpage);
@@ -62,8 +41,7 @@
         }
     }
     
-    echo '<div class="maincontent generalbox">';
-    echo '<h1 align="center">'.get_string('programmingstanding', 'block_programming_standing').'</h1>';
+    echo '<h1 align="center">'.get_string('pluginname', 'block_programming_standing').'</h1>';
 
     $table = new flexible_table('programming-standing-full-standing');
     $def = array('number', 'user', 'accepted');
@@ -97,7 +75,7 @@
         $headers[] = get_string('department');
     } else {
         foreach ($progs as $prog) {
-            $headers[] = "<a href='{$CFG->wwwroot}/mod/programming/view.php?id={$prog->id}'>$prog->name</a>";
+            $headers[] = $OUTPUT->action_link(new moodle_url('/mod/programming/view.php', array('pid' => $prog->id)), $prog->name);
         }
     }
 
@@ -108,7 +86,7 @@
     $table->set_attribute('align', 'center');
     $table->set_attribute('cellpadding', '3');
     $table->set_attribute('cellspacing', '1');
-    $table->define_baseurl($CFG->wwwroot.'/blocks/programming_standing/full_standing.php?id='.$id);
+    $table->define_baseurl(new moodle_url('/blocks/programming_standing/full_standing.php', $params));
     $table->pagesize($perpage, $totalcount);
     $table->setup();
 
@@ -131,9 +109,9 @@
         } else {
             if ($progs) {
                 foreach ($progs as $prog) {
-                    $pr = get_record('programming_result', 'programmingid', $prog->id, 'userid', $t->user->id);
+                    $pr = $DB->get_record('programming_result', array('programmingid' => $prog->id, 'userid' => $t->user->id));
                     if ($pr) {
-                        $ps = get_record('programming_submits', 'id', $pr->latestsubmitid);
+                        $ps = $DB->get_record('programming_submits', array('id' => $pr->latestsubmitid));
                         $html = '';
                         if ($ps->passed) {
                             $tu = $ps->timemodified - $prog->timeopen;
@@ -156,8 +134,6 @@
 
     $table->print_html();
 
-    echo '</div>';
-
 /// Finish the page
-    print_footer($course);
+    echo $OUTPUT->footer($course);
 ?>

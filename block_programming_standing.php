@@ -64,7 +64,7 @@ class block_programming_standing extends block_base {
         $renderer = $PAGE->get_renderer('block_programming_standing');
         $this->content = new stdClass;
         $this->content->text = $renderer->block_list($this->config, $tops, $course->instanceid);
-        $this->content->footer = $renderer->footer($this->config, $this, $course);
+        $this->content->footer = $renderer->footer($this->config, $this->instance->id, $course->instanceid);
 
         return $this->content;
     }
