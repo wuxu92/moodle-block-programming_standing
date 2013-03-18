@@ -31,16 +31,14 @@
 // For the core capabilities, the variable is $moodle_capabilities.
 
 
-$block_programming_standing_capabilities = array(
+$capabilities = array(
 
     'block/programming_standing:view' => array(
 
         'captype' => 'read',
         'contextlevel' => CONTEXT_SYSTEM,
-        'legacy' => array(
-            'teacher' => CAP_ALLOW,
-            'editingteacher' => CAP_ALLOW,
-            'admin' => CAP_ALLOW
+        'archetypes' => array(
+            'user' => CAP_ALLOW,
         )
     ),
 

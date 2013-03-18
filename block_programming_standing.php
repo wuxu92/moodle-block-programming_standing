@@ -6,19 +6,45 @@ include_once($CFG->dirroot.'/lib/tablelib.php');
 class block_programming_standing extends block_base {
 
     function init() {
-        $this->title = get_string('programmingstanding', 'block_programming_standing');
-        $this->version = 2007031901;
+        $this->title = get_string('pluginname', 'block_programming_standing');
+    }
 
-        $this->config->listhowmany = 20;
-        $this->config->perpageonfulllist = 50;
-		$this->config->shownames = 50;
-        $this->config->roleforstanding = 5; // default role id of students
-        $this->config->wrongsubmitminutes = 120;
-        $this->config->showdetail = 1;
+    function instance_allow_config() {
+        return true;
+    }
+
+    function default_config() {
+        if (empty($this->config)) {
+            $this->config = new stdClass;
+        }
+
+        if (!isset($this->config->listhowmany)) {
+            $this->config->listhowmany = 20;
+        }
+
+        if (!isset($this->config->perpageonfulllist)) {
+            $this->config->perpageonfulllist = 50;
+        }
+
+		if (!isset($this->config->shownames)) {
+            $this->config->shownames = 50;
+        }
+
+        if (!isset($this->config->roleforstanding)) {
+            $this->config->roleforstanding = 5; // default role id of students
+        }
+
+        if (!isset($this->config->wrongsubmitminutes)) {
+            $this->config->wrongsubmitminutes = 120;
+        }
+
+        if (!isset($this->config->showdetail)) {
+           $this->config->showdetail = 1;
+        }
     }
 
     function get_content() {
-        global $CFG, $USER;
+        global $PAGE;
 
         $context = get_context_instance(CONTEXT_BLOCK, $this->instance->id);
 
@@ -29,48 +55,20 @@ class block_programming_standing extends block_base {
         if (!isset($this->instance)) {
             return '';
         }
-        $tops = programming_calc_standing($this->instance->pageid, $this->config->roleforstanding, $this->config->wrongsubmitminutes, 0, $this->config->listhowmany);
+
+        $this->default_config();
+
+        $course = $this->page->context;
+
+        $tops = programming_calc_standing($course->instanceid, $this->config->roleforstanding, $this->config->wrongsubmitminutes, 0, $this->config->listhowmany);
+        $renderer = $PAGE->get_renderer('block_programming_latest_ac');
         $this->content = new stdClass;
-        $c  = '<div id="block-programming-standing">';
-        $c .= '<table align="center" class="generaltable generalbox" cellpadding="3" cellspacing="1">';
-        $c .= '<tr align="center">';
-        $c .= '<th>'.get_string('no.', 'block_programming_standing').'</th>';
-        $c .= '<th>'.get_string('who', 'block_programming_standing').'</th>';
-        $c .= '<th>'.get_string('ac', 'block_programming_standing').'</th>';
-        $c .= '</tr>';
-        $i = 1;
-        foreach ($tops as $t) {
-            if ($t->ac == 0 || $i > $this->config->listhowmany) break;
-            $c .= '<tr align="center">';
-            $c .= '<td>'.$i++.'</td>';
-            $c .= '<td>';
-            $c .= $i <= $this->config->shownames || has_capability('block/programming_standing:view', $context) || $t->user->id == $USER->id ? '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$t->user->id.'&amp;course='.$this->instance->pageid.'">'.fullname($t->user).'</a>' : '???';
-            $c .= '</td>';
-        
-            $c .= '<td>'.$t->ac.'</td>';
-            $c .= '</tr>';
-        }
-        if ($i == 1) {
-            $c .= '<tr><td colspan="3">';
-            $c .= get_string('nosubmit', 'block_programming_standing');
-            $c .= '</td></tr>';
-        }
-        $c .= '</table>';
-        $c .= '</div>';
-        $this->content->text = $c;
-        $this->content->footer = '<a href="'.$CFG->wwwroot.'/blocks/programming_standing/full_standing.php?id='.$this->instance->id.'">'.get_string('more').'</a>';
+        $this->content->text = $renderer->ac_list($tops, $course);
+        $this->content->footer = $renderer->footer($this->config, $this, $course);
 
         return $this->content;
     }
 
-    function html_attribute() {
-        return array('class' => 'sideblock block_'.$this->name);
-    }
-
-    function instance_allow_config() {
-        return true;
-    }
-    
 }
 
 ?>
