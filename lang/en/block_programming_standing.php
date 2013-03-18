@@ -15,6 +15,7 @@ $string['roleforstanding'] = 'Role for standing';
 $string['howmanyminuteswrongsubmit'] = 'How many minutes for one error submit';
 $string['shownames'] = 'Show how many names in the list';
 $string['showdetail'] = 'Show detail info';
+$string['programming_standing:view'] = 'See all fullnames';
 
 
 ?>

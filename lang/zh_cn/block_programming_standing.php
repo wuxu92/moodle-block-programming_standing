@@ -15,5 +15,6 @@ $string['roleforstanding'] = '需要排名的角色';
 $string['howmanyminuteswrongsubmit'] = '每次提交记为多少分钟的罚分';
 $string['shownames'] = '显示前多少名的名字';
 $string['showdetail'] = '是否显示详细信息';
+$string['programming_standing:view'] = '看到所有姓名';
 
 ?>

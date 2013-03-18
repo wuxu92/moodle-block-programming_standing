@@ -8,6 +8,10 @@
     margin-right: auto;
 }
 
+.block_programming_standing .content .generaltable .cell {
+    text-align: center;
+}
+
 #page-blocks-programming_standing-full_standing .region-content h2 {
     text-align: center;
 }
