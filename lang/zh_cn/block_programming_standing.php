@@ -1,6 +1,6 @@
 <?php
 
-$string['programmingstanding'] = '编程排名';
+$string['pluginname'] = '编程排名';
 $string['no.'] = '排名';
 $string['who'] = '姓名';
 $string['ac'] = 'AC';
