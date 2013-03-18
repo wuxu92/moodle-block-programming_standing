@@ -7,3 +7,11 @@
     margin-left: auto;
     margin-right: auto;
 }
+
+#page-blocks-programming_standing-full_standing .region-content h2 {
+    text-align: center;
+}
+
+#page-blocks-programming_standing-full_standing #programming-standing-full-standing .cell {
+    text-align: center;
+}

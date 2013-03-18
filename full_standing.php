@@ -23,7 +23,7 @@
     require_login($course->id, true);
     $context = get_context_instance(CONTEXT_COURSE, $courseid);
     $PAGE->set_course($course);
-    $PAGE->set_url('/mod/programming/view.php', $params);
+    $PAGE->set_url('/blocks/programming_standing/full_standing.php', $params);
 
 /// Print the page header
     $PAGE->set_heading(format_string($course->fullname));
@@ -41,7 +41,9 @@
         }
     }
     
-    echo '<h1 align="center">'.get_string('pluginname', 'block_programming_standing').'</h1>';
+    echo html_writer::start_tag('h2');
+    echo get_string('pluginname', 'block_programming_standing');
+    echo html_writer::end_tag('h2');
 
     $table = new flexible_table('programming-standing-full-standing');
     $def = array('number', 'user', 'accepted');
@@ -80,12 +82,8 @@
     }
 
     $table->define_headers($headers);
-    $table->set_attribute('cellspacing', '0');
     $table->set_attribute('id', 'programming-standing-full-standing');
-    $table->set_attribute('class', 'generaltable generalbox');
-    $table->set_attribute('align', 'center');
-    $table->set_attribute('cellpadding', '3');
-    $table->set_attribute('cellspacing', '1');
+    $table->set_attribute('class', 'generaltable');
     $table->define_baseurl(new moodle_url('/blocks/programming_standing/full_standing.php', $params));
     $table->pagesize($perpage, $totalcount);
     $table->setup();
@@ -96,7 +94,7 @@
         $tu = $t->timeused;
         $data = array(
             ++$i,
-            $i <= $block->config->shownames || has_capability('block/programming_standing:view', $context) || $t->user->id == $USER->id ? '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$t->user->id.'&amp;course='.$course->id.'">'.fullname($t->user).'</a>' : '???',
+            $i <= $block->config->shownames || has_capability('block/programming_standing:view', $context) || $t->user->id == $USER->id ? $OUTPUT->action_link(new moodle_url('/user/view.php', array('id' => $t->user->id, 'course' => $course->id)), fullname($t->user)) : '???',
             $t->ac);
         if ($course->id != 1) {
             $data[] = sprintf('%d:%02d:%02d', $p / 3600, ($p % 3600) / 60, ($p % 60));
