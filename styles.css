@@ -1,3 +1,8 @@
 .block_programming_standing .footer .more {
     text-align: center;
 }
+
+.block_programming_standing .content .generaltable {
+    width: 90%;
+    margin: 0 auto;
+}

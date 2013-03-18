@@ -61,9 +61,9 @@ class block_programming_standing extends block_base {
         $course = $this->page->context;
 
         $tops = programming_calc_standing($course->instanceid, $this->config->roleforstanding, $this->config->wrongsubmitminutes, 0, $this->config->listhowmany);
-        $renderer = $PAGE->get_renderer('block_programming_latest_ac');
+        $renderer = $PAGE->get_renderer('block_programming_standing');
         $this->content = new stdClass;
-        $this->content->text = $renderer->ac_list($tops, $course);
+        $this->content->text = $renderer->block_list($this->config, $tops, $course->instanceid);
         $this->content->footer = $renderer->footer($this->config, $this, $course);
 
         return $this->content;

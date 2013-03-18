@@ -1,13 +1,11 @@
 <?php
 
-class block_programming_latest_ac_renderer extends plugin_renderer_base {
+class block_programming_standing_renderer extends plugin_renderer_base {
 
-    function block_list($tops, $course) {
+    function block_list($config, $tops, $courseid) {
         global $OUTPUT;
 
         $c = '';
-        $total = 0;
-        $tops = programming_latest_ac($course->instanceid, $config->roleforlatestac, $total, 0, $config->listhowmany);
 
         if (!empty($tops)) {
             $table = new html_table();
@@ -19,9 +17,9 @@ class block_programming_latest_ac_renderer extends plugin_renderer_base {
 
             $i = 1;
             foreach ($tops as $t) {
-                if ($t->ac == 0 || $i > $this->config->listhowmany) break;
+                if ($t->ac == 0 || $i > $config->listhowmany) break;
 
-                $who = $OUTPUT->action_link(new moodle_url('/user/view.php', array('id' => $t->user->id, 'course' => $course->instanceid)), fullname($t->user));
+                $who = $OUTPUT->action_link(new moodle_url('/user/view.php', array('id' => $t->user->id, 'course' => $courseid)), fullname($t->user));
                 $which = $t->ac;
                 $table->data[] = array($i++, $who, $which);
             }
@@ -32,8 +30,9 @@ class block_programming_latest_ac_renderer extends plugin_renderer_base {
         }
 
         return $c;
-        $c .= '</table>';
+    }
 
+    function footer() {
     }
 
 }

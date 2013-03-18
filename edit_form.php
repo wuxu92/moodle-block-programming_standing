@@ -1,6 +1,6 @@
 <?php
  
-class block_programming_latest_ac_edit_form extends block_edit_form {
+class block_programming_standing_edit_form extends block_edit_form {
  
     protected function specific_definition($mform) {
         // Fields for editing HTML block title and contents.
