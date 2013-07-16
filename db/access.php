@@ -33,6 +33,17 @@
 
 $capabilities = array(
 
+    'block/programming_standing:addinstance' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_BLOCK,
+        'archetypes' => array(
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ),
+
+        'clonepermissionsfrom' => 'moodle/site:manageblocks'
+    ),
+
     'block/programming_standing:view' => array(
 
         'captype' => 'read',
